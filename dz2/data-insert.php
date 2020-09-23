@@ -6,7 +6,7 @@ try {
       $dataArray = [];
     }
 $availableBanknotes = $dataArray;
-// рахуємо загальну суму коштів у банкоматі
+// рахуємо загальну суму коштів у масиві
 function  allCount ($availableBanknotes){
     $sum = 0;
 for($i = 0; $i < count($availableBanknotes); $i++){
