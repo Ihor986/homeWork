@@ -6,11 +6,13 @@ try {
       $dataArray = [];
     }
 $availableBanknotes = $dataArray;
-// рахуємо загальну суму коштів у масиві
+
+// рахуємо загальну суму коштів у банкоматі
 function  allCount ($availableBanknotes){
-    $sum = 0;
-for($i = 0; $i < count($availableBanknotes); $i++){
-  $sum = $sum + $availableBanknotes[$i][1]*$availableBanknotes[$i][0];
+  $sum = 0;
+  foreach($availableBanknotes as $key => $value){
+
+  $sum = $sum + $key*$value;
 }
 return $sum;
 };
@@ -36,28 +38,32 @@ if (gettype($desiredAmount/5)!==integer){
 };
 $balanceAmount = $desiredAmount;
 $usedBanknotes = [
-    [0, 1000],
-    [0, 500],
-    [0, 200],
-    [0, 100],
-    [0, 50],
-    [0, 20],
-    [0, 10],
-    [0, 5]
+  1000 => 0,
+  500 => 0,
+  200 => 0,
+  100 => 0,
+  50 => 0,
+  20 => 0,
+  10 => 0,
+  5 => 0
 ];
-for($i = 0; $i < count($availableBanknotes); $i++){
-    $used = floor($balanceAmount / $availableBanknotes[$i][1]);
-    $availableBanknotes[$i][0] = $availableBanknotes[$i][0] - $used;
+foreach($availableBanknotes as $key => $value){
+    $used = floor($balanceAmount/$key);
+   
+    $availableBanknotes[$key] = $availableBanknotes[$key] - $used;
     $balanceAmountMod = 0;
-    if ($availableBanknotes[$i][0] < 0){
-      $balanceAmountMod = abs ( $availableBanknotes[$i][0] )*$availableBanknotes[$i][1];
-      $used = $used + $availableBanknotes[$i][0];
-      $availableBanknotes[$i][0] = 0; 
+    if ($availableBanknotes[$key] < 0){
+      $balanceAmountMod = abs ( $availableBanknotes[$key] )*$key;
+      $used = $used + $availableBanknotes[$key];
+      $availableBanknotes[$key] = 0; 
+     
     };
-    $balanceAmount = $balanceAmount % $availableBanknotes[$i][1] + $balanceAmountMod;
-    $usedBanknotes[$i][0] = $used;
-     if ($usedBanknotes[$i][0]) {
-        $message = $message.$usedBanknotes[$i][0]."*".$usedBanknotes[$i][1]." ";
+    $balanceAmount = $balanceAmount % $key + $balanceAmountMod;
+    
+    $usedBanknotes[$key] = $used;
+     if ($usedBanknotes[$key]) {
+       
+        $message = $message.$usedBanknotes[$key]."*".$key." ";
    };
 };
 // перевіряємо чи є у банкоматі необхідні купюри
@@ -71,4 +77,5 @@ echo "Число купюр: $message";
 echo "<div><button><a href=\"index.php\">повернення до форми вводу</a></button></div>";
 $newDataSrt = json_encode($availableBanknotes, JSON_PRETTY_PRINT);
 $result = file_put_contents('data.json', $newDataSrt);
+
 ?>
