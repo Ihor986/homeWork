@@ -1,33 +1,22 @@
 <?php
 try {
       $dataStr = file_get_contents('data.json');
-      $dataArray = json_decode($dataStr, true);
+      $availableBanknotes = json_decode($dataStr, true);
     } catch (Exception $ex) {
-      $dataArray = [];
+      $availableBanknotes = [];
     }
-$availableBanknotes = $dataArray;
-// рахуємо загальну суму коштів у банкоматі
-function  allCount ($availableBanknotes){
-  $sum = 0;
-  foreach($availableBanknotes as $key => $value){
-
-  $sum = $sum + $key*$value;
-}
+// рахуємо загальну суму коштів    
+function findMoneySumm($dataArray){
+$sum = array_reduce(array_keys($dataArray), function($carry, $key) use ($dataArray) {
+    $carry += $dataArray[$key]*$key;
+    return $carry;
+}, 0);
 return $sum;
-};
-$allCount = allCount ($availableBanknotes);
+} ;
+$findMoneySumm = findMoneySumm($availableBanknotes);
 $desiredAmount = htmlspecialchars($_POST['amount']);
 $balanceAmount = $desiredAmount;
-$usedBanknotes = [
-  1000 => 0,
-  500 => 0,
-  200 => 0,
-  100 => 0,
-  50 => 0,
-  20 => 0,
-  10 => 0,
-  5 => 0
-];
+$usedBanknotes = [];
 foreach($availableBanknotes as $key => $value){
     $used = floor($balanceAmount/$key);
    
@@ -54,21 +43,21 @@ function echoError ($errorMessage){
     exit();
 };
 // перевіряємо наявність виключень
-function searchError ($desiredAmount,$allCount, $usedBanknotes){
-if ($desiredAmount>$allCount){
+function searchError ($desiredAmount,$findMoneySumm, $usedBanknotes){
+if ($desiredAmount>$findMoneySumm){
   $errorMessage = "Недостатньо коштів";
 } else if (!$desiredAmount){
   $errorMessage = "Невірно вказана сума (нуль неможливо видати)";
 } else if (gettype($desiredAmount/5)!==integer){
   $errorMessage = "Невірно вказана сума (не кратна 5, неможливо видати)";
-} else if (allCount ($usedBanknotes)<$desiredAmount){
+} else if (findMoneySumm ($usedBanknotes)<$desiredAmount){
   $errorMessage = "Неможливо видати (недостатньо дрібних купюр)";
  } else {
   return false;
 }
 echoError ($errorMessage);
 };
-searchError ($desiredAmount, $allCount, $usedBanknotes);
+searchError ($desiredAmount, $findMoneySumm, $usedBanknotes);
 echo "Сума: $desiredAmount </br>";
 echo "Число купюр: $message";
 echo "<div><button><a href=\"index.php\">повернення до форми вводу</a></button></div>";
