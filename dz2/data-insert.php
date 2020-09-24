@@ -6,7 +6,6 @@ try {
       $dataArray = [];
     }
 $availableBanknotes = $dataArray;
-
 // рахуємо загальну суму коштів у банкоматі
 function  allCount ($availableBanknotes){
   $sum = 0;
@@ -18,24 +17,6 @@ return $sum;
 };
 $allCount = allCount ($availableBanknotes);
 $desiredAmount = htmlspecialchars($_POST['amount']);
-// перевіряємо чи є у банкоматі необхідна сума
-if ($desiredAmount>$allCount){
-    echo "<div>Недостатньо коштів</div>";
-    echo "<div><button><a href=\"index.php\">повернення до форми вводу</a></button></div>";
-    exit();
-};
-// перевіряємо чи не є введена сума рівною нулю
-if (!$desiredAmount){
-    echo "<div>Невірно вказана сума (нуль неможливо видати)</div>";
-    echo "<div><button><a href=\"index.php\">повернення до форми вводу</a></button></div>";
-    exit();
-};
-// перевіряємо чи введена сума кратна 5
-if (gettype($desiredAmount/5)!==integer){
-    echo "<div>Невірно вказана сума (не кратна 5, неможливо видати)</div>";
-    echo "<div><button><a href=\"index.php\">повернення до форми вводу</a></button></div>";
-    exit();
-};
 $balanceAmount = $desiredAmount;
 $usedBanknotes = [
   1000 => 0,
@@ -66,16 +47,31 @@ foreach($availableBanknotes as $key => $value){
         $message = $message.$usedBanknotes[$key]."*".$key." ";
    };
 };
-// перевіряємо чи є у банкоматі необхідні купюри
-if (allCount ($usedBanknotes)<$desiredAmount){
-    echo "<div>Неможливо видати (недостатньо дрібних купюр)</div>";
+// виведення помилки
+function echoError ($errorMessage){
+    echo "<div>$errorMessage</div>";
     echo "<div><button><a href=\"index.php\">повернення до форми вводу</a></button></div>";
     exit();
- };
+};
+// перевіряємо наявність виключень
+function searchError ($desiredAmount,$allCount, $usedBanknotes){
+if ($desiredAmount>$allCount){
+  $errorMessage = "Недостатньо коштів";
+} else if (!$desiredAmount){
+  $errorMessage = "Невірно вказана сума (нуль неможливо видати)";
+} else if (gettype($desiredAmount/5)!==integer){
+  $errorMessage = "Невірно вказана сума (не кратна 5, неможливо видати)";
+} else if (allCount ($usedBanknotes)<$desiredAmount){
+  $errorMessage = "Неможливо видати (недостатньо дрібних купюр)";
+ } else {
+  return false;
+}
+echoError ($errorMessage);
+};
+searchError ($desiredAmount, $allCount, $usedBanknotes);
 echo "Сума: $desiredAmount </br>";
 echo "Число купюр: $message";
 echo "<div><button><a href=\"index.php\">повернення до форми вводу</a></button></div>";
 $newDataSrt = json_encode($availableBanknotes, JSON_PRETTY_PRINT);
 $result = file_put_contents('data.json', $newDataSrt);
-
 ?>
