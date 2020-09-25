@@ -12,23 +12,23 @@
     $creditAmount = 34499;
   // масив банків  
     $banks = [
-        homoCredit => [
-            name => 'HomoCredit',
-            interest => 0.04,
-            monthCommission => 500,
-            accountFee => 0
+        "homoCredit" => [
+            "name" => 'HomoCredit',
+            "interest" => 0.04,
+            "monthCommission" => 500,
+            "accountFee" => 0
         ], 
-        softbank => [
-            name => 'Softbank',
-            interest => 0.03,
-            monthCommission => 1000,
-            accountFee => 0
+        "softbank" => [
+            "name" => 'Softbank',
+            "interest" => 0.03,
+            "monthCommission" => 1000,
+            "accountFee" => 0
         ], 
-        strawberryBank => [
-            name => 'StrawberryBank',
-            interest => 0.02,
-            monthCommission => 0,
-            accountFee => 6666
+        "strawberryBank" => [
+            "name" => 'StrawberryBank',
+            "interest" => 0.02,
+            "monthCommission" => 0,
+            "accountFee" => 6666
             ]
         ];
         // повертаємо значення загальної вартості товару з урахуванням кредиту від банку(можливо обрахувати загальний термін)
