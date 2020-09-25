@@ -30,18 +30,21 @@
     };
     // виводимо результат
     function outputTheResult ($banks, $creditAmount, $maxMonthlyPayment){
-       $bestOffer;
-       $bestOfferMessage;
+       $bestOffer = 0;
+       $bestOfferMessage = "Найвигіднішою є пропозиція від банку";
        foreach($banks as $bank => $value) {
        $totalCreditAmountAndTermInBank = totalCreditAmount($value, $creditAmount, $maxMonthlyPayment);
        echo "Загальна вартість товару з урахуванням кредиту від банку \"$bank\" становить: $totalCreditAmountAndTermInBank[amount] грн!<br/>";
        echo "Кредит буде погашено за $totalCreditAmountAndTermInBank[term] міс.<hr><br/>"; 
-       if ($totalCreditAmountAndTermInBank['amount'] < $bestOffer || $bestOffer == 0){
+       if ($totalCreditAmountAndTermInBank['amount'] == $bestOffer){
+          $bestOfferMessage = $bestOfferMessage.", \"$bank\"";
+       } else if ($totalCreditAmountAndTermInBank['amount'] < $bestOffer || $bestOffer == 0 ){
           $bestOffer = $totalCreditAmountAndTermInBank['amount'];
-          $bestOfferMessage = "Найвигіднішою є пропозиція від банку \"$bank\" $totalCreditAmountAndTermInBank[amount] грн!<br/>" ;
+          $bestOfferMessage = "Краще обрати банк(и) \"$bank\" " ;
        };
-    };
-    echo $bestOfferMessage;
+    };    
+        $fullBestOfferMessage = "$bestOfferMessage! Загальна вартість товару з урахуванням кредиту становитиме: $bestOffer грн!<hr><br/>";
+        echo $fullBestOfferMessage;
     };
     // масив банків  
     $banks = [
@@ -62,7 +65,7 @@
             "interest" => 0.02,
             "monthCommission" => 0,
             "accountFee" => 6666
-            ]
+        ]
         ];
     outputTheResult ($banks, $creditAmount, $maxMonthlyPayment);
 ?>
