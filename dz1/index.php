@@ -31,7 +31,7 @@
     // виводимо результат
     function outputTheResult ($banks, $creditAmount, $maxMonthlyPayment){
        $bestOffer = 0;
-       $bestOfferMessage = "Найвигіднішою є пропозиція від банку";
+       $bestOfferMessage = "";
        foreach($banks as $bank => $value) {
        $totalCreditAmountAndTermInBank = totalCreditAmount($value, $creditAmount, $maxMonthlyPayment);
        echo "Загальна вартість товару з урахуванням кредиту від банку \"$bank\" становить: $totalCreditAmountAndTermInBank[amount] грн!<br/>";
