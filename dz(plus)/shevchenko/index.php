@@ -3,7 +3,7 @@ try {
       $dataArr = file('shevchenko.txt');
     } catch (Exception $ex) {
       $dataArr = [];
-    }
+    };
 function printLine($dataArr, $countLine){
   // дізнаємося довжину рядка
   $countLine = 0;
@@ -11,7 +11,7 @@ function printLine($dataArr, $countLine){
       $countL = mb_strlen($line);
   if ($countL > $countLine){
       $countLine = $countL;
-  };
+    };
   };  
   // дізнаємося кількістьрядків
   $countArr = count ($dataArr);
@@ -22,18 +22,17 @@ function printLine($dataArr, $countLine){
       if ($dataArr[$q] == $dataArr[0]){
         $arrDataStr = preg_split('/(?<!^)(?!$)/u', $dataArr[$q]);
         array_splice($arrDataStr, 0, 1);
-      } else {
+        } else {
         $arrDataStr = preg_split('/(?<!^)(?!$)/u', $dataArr[$q]);
-      };
-      array_pop($arrDataStr);
-      if (!$arrDataStr[$i]){
+        };
+        array_pop($arrDataStr);
+        if (!$arrDataStr[$i]){
           $arrDataStr[$i] = " ";
-      };
+        };
       $line = $line.$arrDataStr[$i]."      ";
-      
-  }
+      };
   echo "<pre>$line </br></pre>";
   };
-}
+};
 printLine($dataArr, $countLine);
 ?>
