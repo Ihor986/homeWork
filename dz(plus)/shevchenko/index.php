@@ -26,7 +26,7 @@ function printLine($dataArr, $countLine){
         $arrDataStr = preg_split('/(?<!^)(?!$)/u', $dataArr[$q]);
         };
         array_pop($arrDataStr);
-        if (!$arrDataStr[$i]){
+      if (!$arrDataStr[$i]){
           $arrDataStr[$i] = " ";
         };
       $line = $line.$arrDataStr[$i]."      ";
