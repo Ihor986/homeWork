@@ -16,14 +16,13 @@ class CreateVacanciesTable extends Migration
     {
         Schema::create('vacancies', function (Blueprint $table) {
             $table->id();
-            $table->string('status');
+            $table->string('status')->nullable();
             $table->string('vacancy_name');
-            $table->string('workers_amount');
-            $table->string('workers_booked');
-            $table->string('organization');
+            $table->integer('workers_amount');
+            $table->integer('workers_booked')->nullable();
             $table->bigInteger('organization_id')->unsigned();
             $table->foreign('organization_id')->references('id')->on('organizations');
-            $table->string('salary');
+            $table->integer('salary');
             $table->timestamps();
             $table->softDeletes();
         });

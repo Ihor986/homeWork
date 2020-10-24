@@ -19,8 +19,7 @@ class CreateOrganizationsTable extends Migration
             $table->string('title');
             $table->string('city');
             $table->string('country');
-            $table->string('creator');
-            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('user_id')->unsigned()->default(1);
             $table->foreign('user_id')->references('id')->on('users'); //User::class,
             $table->timestamps();
             $table->softDeletes();

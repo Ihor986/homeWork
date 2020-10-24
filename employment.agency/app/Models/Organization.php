@@ -11,6 +11,13 @@ class Organization extends Model
     use HasFactory, SoftDeletes;
 
 
+    protected $fillable = [
+        'title',
+        'country',
+        'city'
+    ];
+
+
 
     public function users()
     {

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Vacancy;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class VacancyController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +14,8 @@ class VacancyController extends Controller
      */
     public function index()
     {
-        $vacancies = Vacancy::get();
-        return response()->json($vacancies);
+        $users = User::get();
+        return response()->json($users);
     }
 
     /**
@@ -24,45 +24,46 @@ class VacancyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        // dd($request->all());
-        $vacancy = Vacancy::create($request->all()); //->validated()
-        return response()->json($vacancy, 201);
-    }
+    // public function store(Request $request)
+    // {
+    //     $user = User::create($request->all()); //->validated()
+    //     return response()->json($user, 201);
+    // }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Vacancy  $vacancy
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Vacancy $vacancy)
+    public function show(User $user)
     {
-        return response()->json($vacancy);
+        return response()->json($user);
     }
+
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Vacancy  $vacancy
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Vacancy $vacancy)
+    public function update(Request $request, User $user)
     {
-        $vacancy->update($request->all()); //->validated()
-        return response()->json($vacancy);
+        // dd($user->all());
+        $user->update($request->all()); //->validated()
+        return response()->json($user);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Vacancy  $vacancy
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Vacancy $vacancy)
+    public function destroy(User $user)
     {
-        $vacancy->delete();
+        $user->delete();
         return response()->json(["message" => "Deleted"], 204);
     }
 }
