@@ -24,6 +24,10 @@ use Illuminate\Support\Facades\Route;
 // Route::post('vacancy', [VacancyController::class, 'store']);
 Route::apiResource('vacancy', VacancyController::class);
 Route::apiResource('organization', OrganizationController::class);
-Route::apiResource('user', UserController::class);
+// Route::apiResource('user', UserController::class);
+Route::get('user', [UserController::class, 'index']);
+Route::get('user/{user}', [UserController::class, 'show']);
+Route::put('user/{user}', [UserController::class, 'update']);
+Route::delete('user/{user}', [UserController::class, 'destroy']);
 
 Route::post('register', [AuthController::class, 'store']);

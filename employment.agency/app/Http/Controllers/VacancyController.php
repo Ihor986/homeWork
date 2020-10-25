@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Vacancy\StoreRequest;
+use App\Http\Requests\Vacancy\UpdateRequest;
 use App\Models\Vacancy;
 use Illuminate\Http\Request;
 
@@ -24,10 +26,10 @@ class VacancyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         // dd($request->all());
-        $vacancy = Vacancy::create($request->all()); //->validated()
+        $vacancy = Vacancy::create($request->validated()); //->validated()
         return response()->json($vacancy, 201);
     }
 
@@ -48,9 +50,9 @@ class VacancyController extends Controller
      * @param  \App\Models\Vacancy  $vacancy
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Vacancy $vacancy)
+    public function update(UpdateRequest $request, Vacancy $vacancy)
     {
-        $vacancy->update($request->all()); //->validated()
+        $vacancy->update($request->validated()); //->validated()
         return response()->json($vacancy);
     }
 

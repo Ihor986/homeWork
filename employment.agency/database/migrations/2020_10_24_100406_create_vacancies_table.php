@@ -22,6 +22,7 @@ class CreateVacanciesTable extends Migration
             $table->integer('workers_booked')->nullable();
             $table->bigInteger('organization_id')->unsigned();
             $table->foreign('organization_id')->references('id')->on('organizations');
+            // $table->foreignIdFor(Organization::class, 'organization_id');
             $table->integer('salary');
             $table->timestamps();
             $table->softDeletes();

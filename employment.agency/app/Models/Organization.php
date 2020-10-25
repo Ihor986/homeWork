@@ -19,8 +19,13 @@ class Organization extends Model
 
 
 
-    public function users()
-    {
-        return $this->belongsTo(User::class);
-    }
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class, 'foreign_key');
+    // }
+
+    // public function vacancy()
+    // {
+    //     return $this->hasMany(Vacancy::class, 'foreign_key');
+    // }
 }

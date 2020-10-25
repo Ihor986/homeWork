@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Organization\StoreRequest;
+use App\Http\Requests\Organization\UpdateRequest;
 use App\Models\Organization;
 use Illuminate\Http\Request;
 
@@ -23,9 +25,9 @@ class OrganizationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $organization = Organization::create($request->all()); //->validated()
+        $organization = Organization::create($request->validated()); //->validated()
         return response()->json($organization, 201);
     }
 
@@ -46,9 +48,9 @@ class OrganizationController extends Controller
      * @param  \App\Models\Organization  $organization
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Organization $organization)
+    public function update(UpdateRequest $request, Organization $organization)
     {
-        $organization->update($request->all()); //->validated()
+        $organization->update($request->validated()); //->validated()
         return response()->json($organization);
     }
 

@@ -20,13 +20,13 @@ class Vacancy extends Model
     ];
 
 
-    // public function organizations()
+    // public function organization()
     // {
-    //     return $this->hasOne(Organization::class);
+    //     return $this->belongsTo(Organization::class, 'foreign_key');
     // }
 
-    // public function users()
+    // public function user()
     // {
-    //     return $this->belongsTo(User::class);
+    //     return $this->hasMany(User::class, 'foreign_key');
     // }
 }

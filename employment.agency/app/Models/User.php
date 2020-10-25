@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes; //, HasApiTokens
 
     /**
      * The attributes that are mass assignable.
@@ -47,13 +47,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function organizations()
-    {
-        return $this->hasMany(Organization::class);
-    }
+    // public function organizations()
+    // {
+    //     return $this->hasMany(Organization::class, 'foreign_key');
+    // }
 
-    public function vacancies()
-    {
-        return $this->belongsTo(Vacancy::class);
-    }
+    // public function vacancies()
+    // {
+    //     return $this->belongsTo(Vacancy::class, 'foreign_key');
+    // }
 }
