@@ -21,7 +21,7 @@ class Organization extends Model
 
     // public function user()
     // {
-    //     return $this->belongsTo(User::class, 'foreign_key');
+    //     return $this->belongsTo(User::class);
     // }
 
     // public function vacancy()
