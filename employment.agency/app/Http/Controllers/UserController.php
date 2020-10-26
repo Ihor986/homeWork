@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\User\UpdateRequest;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\UserResourceCollection;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -15,21 +17,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::get();
-        return response()->json($users);
+        $this->authorizeResource('viewAny', User::class);
+        $users = User::get(); //;with('')->paginate()
+        return UserResourceCollection::make($users);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    // public function store(Request $request)
-    // {
-    //     $user = User::create($request->all()); //->validated()
-    //     return response()->json($user, 201);
-    // }
 
     /**
      * Display the specified resource.
@@ -39,7 +30,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return response()->json($user);
+
+        $this->authorizeResource('view', $user);
+        return UserResource::make($user);
     }
 
     /**
@@ -51,7 +44,7 @@ class UserController extends Controller
      */
     public function update(UpdateRequest $request, User $user)
     {
-        // dd($user->all());
+        $this->authorizeResource('update', $user);
         $user->update($request->validated()); //->validated()
         return response()->json($user);
     }
@@ -64,6 +57,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        $this->authorizeResource('delete', $user);
         $user->delete();
         return response()->json(["message" => "Deleted"], 204);
     }

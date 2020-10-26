@@ -4,11 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/**
- * @mixing User
- */
-
-class UserResource extends JsonResource
+class OrganizationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,15 +16,13 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'role' => $this->role,
-            'email' => $this->email,
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'country' => $this->country,
+            'title' => $this->title,
             'city' => $this->city,
-            'phone' => $this->phone,
+            'country' => $this->country,
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at
+            'updated_at' => $this->updated_at,
+            'user' => UserResource::collection($this->whenLoaded('users')),
+
         ];
     }
 }

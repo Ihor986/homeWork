@@ -21,13 +21,32 @@ use Illuminate\Support\Facades\Route;
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-// Route::post('vacancy', [VacancyController::class, 'store']);
-Route::apiResource('vacancy', VacancyController::class);
-Route::apiResource('organization', OrganizationController::class);
-// Route::apiResource('user', UserController::class);
+
+
+//Auth
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+// User
 Route::get('user', [UserController::class, 'index']);
 Route::get('user/{user}', [UserController::class, 'show']);
 Route::put('user/{user}', [UserController::class, 'update']);
 Route::delete('user/{user}', [UserController::class, 'destroy']);
+// Organization
+Route::apiResource('organization', OrganizationController::class);
+// Vacancy
+Route::apiResource('vacancy', VacancyController::class);
+// Stats
 
-Route::post('register', [AuthController::class, 'store']);
+
+
+
+
+// Authenticated users
+Route::group(['middleware' => ['auth:sanctum']], function () {
+
+    Route::apiResource('users', UserController::class);
+});
+
+// Fallback route
+Route::fallback([AuthController::class, 'fallback']);

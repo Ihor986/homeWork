@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
 
 class User extends Authenticatable
 {
-    use HasFactory, HasApiTokens, Notifiable, SoftDeletes; //, HasApiTokens
+    use HasFactory, HasApiTokens, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -50,10 +51,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    // public function organizations()
-    // {
-    //     return $this->hasMany(Organization::class);
-    // }
+    public function organizations()
+    {
+
+        return $this->hasMany(Organization::class);
+    }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = Hash::make($value);
+    }
 
     // public function vacancies()
     // {
