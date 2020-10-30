@@ -4,23 +4,44 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\User\UpdateRequest;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\StatsUserResource;
 use App\Http\Resources\UserResourceCollection;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+    // public function __construct()
+    // {
+    //     $this->authorizeResource(User::class);
+    // }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $this->authorizeResource('viewAny', User::class);
-        $users = User::get(); //;with('')->paginate()
+        // return $request;
+        $this->authorize('viewAny', User::class);
+        $search = "%{$request->search}%";
+        $users = User::when($search, function ($query, $search) {
+            return $query->where('first_name', 'like', $search)
+                ->orWhere('last_name', 'like', $search)
+                ->orWhere('city', 'like', $search)
+                ->orWhere('country', 'like', $search);
+        })->get(); //;with('')->paginate()
         return UserResourceCollection::make($users);
     }
+
+    // public function index()
+    // {
+    //     // return $request;
+    //     $this->authorize('viewAny', User::class);
+    //     $users = User::get(); //;with('')->paginate()
+    //     return UserResourceCollection::make($users);
+    // }
 
     /**
      * Display the specified resource.
@@ -30,8 +51,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-
-        $this->authorizeResource('view', $user);
+        $this->authorize('view', User::class);
         return UserResource::make($user);
     }
 
@@ -44,9 +64,20 @@ class UserController extends Controller
      */
     public function update(UpdateRequest $request, User $user)
     {
-        $this->authorizeResource('update', $user);
-        $user->update($request->validated()); //->validated()
+        $this->authorize('update', User::class);
+        $user->update($request->validated());
         return response()->json($user);
+    }
+
+    public function statsUser()
+    {
+        $this->authorize('viewAny', User::class);
+        $admin = User::select(DB::raw('COUNT(role) as admin'))->where('role', 'admin')->get()->first();
+        $worker = User::select(DB::raw('COUNT(role) as worker'))->where('role', 'worker')->get()->first();
+        $employer = User::select(DB::raw('COUNT(role) as employer'))->where('role', 'employer')->get()->first();
+        $users = array_merge(json_decode($admin, true),json_decode($worker, true),json_decode($employer, true));
+        return response()->json($users);
+    
     }
 
     /**
@@ -57,7 +88,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $this->authorizeResource('delete', $user);
+        $this->authorize('delete', User::class);
         $user->delete();
         return response()->json(["message" => "Deleted"], 204);
     }

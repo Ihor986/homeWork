@@ -16,7 +16,8 @@ class VacancyController extends Controller
      */
     public function index()
     {
-        $this->authorizeResource('viewAny', Vacancy::class);
+
+        $this->authorize('viewAny', Vacancy::class);
         $vacancies = Vacancy::get();
         return response()->json($vacancies);
     }
@@ -29,7 +30,7 @@ class VacancyController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $this->authorizeResource('create', Vacancy::class);
+        $this->authorize('create', Vacancy::class);
         $vacancy = Vacancy::create($request->validated());
         return response()->json($vacancy, 201);
     }
@@ -42,7 +43,7 @@ class VacancyController extends Controller
      */
     public function show(Vacancy $vacancy)
     {
-        $this->authorizeResource('view', $vacancy);
+        $this->authorize('view', $vacancy);
         return response()->json($vacancy);
     }
     /**
@@ -54,9 +55,14 @@ class VacancyController extends Controller
      */
     public function update(UpdateRequest $request, Vacancy $vacancy)
     {
-        $this->authorizeResource('update', $vacancy);
-        $vacancy->update($request->validated()); //->validated()
+        $this->authorize('update', $vacancy);
+        $vacancy->update($request->validated());
         return response()->json($vacancy);
+    }
+
+        public function vacancy()
+    {
+        //
     }
 
     /**
@@ -67,7 +73,7 @@ class VacancyController extends Controller
      */
     public function destroy(Vacancy $vacancy)
     {
-        $this->authorizeResource('delete', $vacancy);
+        $this->authorize('delete', $vacancy);
         $vacancy->delete();
         return response()->json(["message" => "Deleted"], 204);
     }

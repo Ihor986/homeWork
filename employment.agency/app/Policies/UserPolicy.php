@@ -4,11 +4,19 @@ namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Http\Request;
 use phpDocumentor\Reflection\PseudoTypes\True_;
 
 class UserPolicy
 {
     use HandlesAuthorization;
+
+    public function before(User $user)
+    {
+        if ($user->role == 'admin') {
+            return true;
+        }
+    }
 
     /**
      * Determine whether the user can view any models.
@@ -18,7 +26,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        return true;
+        return false;
     }
 
     /**
@@ -30,7 +38,7 @@ class UserPolicy
      */
     public function view(User $user, User $model)
     {
-        return true;
+        return false; // $user->id == 10;
     }
 
     /**

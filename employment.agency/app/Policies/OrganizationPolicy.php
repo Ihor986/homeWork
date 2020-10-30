@@ -10,6 +10,13 @@ class OrganizationPolicy
 {
     use HandlesAuthorization;
 
+    public function before(User $user)
+    {
+        if ($user->role == 'admin') {
+            return true;
+        }
+    }
+
     /**
      * Determine whether the user can view any models.
      *
@@ -30,7 +37,7 @@ class OrganizationPolicy
      */
     public function view(User $user, Organization $organization)
     {
-        //
+        return true;
     }
 
     /**
@@ -41,7 +48,7 @@ class OrganizationPolicy
      */
     public function create(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -53,7 +60,7 @@ class OrganizationPolicy
      */
     public function update(User $user, Organization $organization)
     {
-        //
+        return true;
     }
 
     /**
@@ -65,7 +72,7 @@ class OrganizationPolicy
      */
     public function delete(User $user, Organization $organization)
     {
-        //
+        return true;
     }
 
     /**
@@ -77,7 +84,7 @@ class OrganizationPolicy
      */
     public function restore(User $user, Organization $organization)
     {
-        //
+        return true;
     }
 
     /**
@@ -89,6 +96,6 @@ class OrganizationPolicy
      */
     public function forceDelete(User $user, Organization $organization)
     {
-        //
+        return true;
     }
 }

@@ -27,25 +27,21 @@ use Illuminate\Support\Facades\Route;
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-// User
-Route::get('user', [UserController::class, 'index']);
-Route::get('user/{user}', [UserController::class, 'show']);
-Route::put('user/{user}', [UserController::class, 'update']);
-Route::delete('user/{user}', [UserController::class, 'destroy']);
-// Organization
-Route::apiResource('organization', OrganizationController::class);
-// Vacancy
-Route::apiResource('vacancy', VacancyController::class);
-// Stats
-
-
-
-
 
 // Authenticated users
 Route::group(['middleware' => ['auth:sanctum']], function () {
-
-    Route::apiResource('users', UserController::class);
+    // User
+    Route::apiResource('user', UserController::class);
+    // Organization
+    Route::apiResource('organization', OrganizationController::class);
+    // Vacancy
+    Route::apiResource('vacancy', VacancyController::class);
+});
+// Stats
+Route::group(['prefix' => 'stats'], function () {
+    // Route::post('vacancy', [AuthController::class, 'register'])->middleware('auth:sanctum');
+    // Route::post('organization', [AuthController::class, 'login'])->middleware('auth:sanctum');
+    Route::get('user', [UserController::class, 'statsUser'])->middleware('auth:sanctum');
 });
 
 // Fallback route

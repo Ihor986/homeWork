@@ -19,7 +19,7 @@ class CreateVacanciesTable extends Migration
             // $table->foreignIdFor(Organization::class, 'organization_id');
             $table->bigInteger('organization_id')->unsigned();
             $table->foreign('organization_id')->references('id')->on('organizations');
-            $table->string('status')->nullable();
+            $table->string('status')->default('active');
             $table->string('vacancy_name');
             $table->integer('workers_amount');
             $table->integer('workers_booked')->nullable();
