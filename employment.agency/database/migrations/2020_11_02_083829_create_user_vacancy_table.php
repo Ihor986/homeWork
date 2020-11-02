@@ -21,7 +21,7 @@ class CreateUserVacancyTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->bigInteger('vacancy_id')->unsigned();
             $table->foreign('vacancy_id')->references('id')->on('vacancies');
-            $table->unique('user_id', 'vacancy_id');
+            $table->unique(['user_id', 'vacancy_id']);
             $table->timestamps();
             $table->softDeletes();
         });

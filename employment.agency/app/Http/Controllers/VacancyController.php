@@ -69,43 +69,50 @@ class VacancyController extends Controller
     public function book(BookRequest $request, Vacancy $vacancy)
     {
         $this->authorize('book', $vacancy);
-        DB::transaction(function () use ($request) {
-            $vacancy_id = $request->vacancy_id;
-            $booked = Vacancy::select('workers_amount', 'workers_booked')->where('id', '=', "{$vacancy_id}")->get()->first();
-            if ($booked->workers_amount <= $booked->workers_booked) {
+        $user_id = $request->user_id;
+        $vacancy_id = $request->vacancy_id;
+        $subscriptionCheck = DB::table('user_vacancy')
+            ->where('user_id', '=', "{$user_id}")
+            ->where('vacancy_id', '=', "{$vacancy_id}")
+            ->get()
+            ->count();
+        if ($subscriptionCheck == 0) {
+            DB::transaction(function () use ($vacancy_id, $request) {
+                $booked = Vacancy::select('workers_amount', 'workers_booked')->where('id', '=', "{$vacancy_id}")->get()->first();
+                if ($booked->workers_amount <= $booked->workers_booked) {
 
-                return response()->json(["message" => "this vacancy is inactive"]);
-            }
-            $workers_booked_inc = $booked->workers_booked + 1;
-            if ($booked->workers_amount <= $workers_booked_inc) {
-                Vacancy::where('id', '=', "{$vacancy_id}")->update(['status' =>  'inactive']);
-            }
-            Vacancy::where('id', '=', "{$vacancy_id}")->update(['workers_booked' =>  "{$workers_booked_inc}"]);
-            $book = DB::table('user_vacancy')->insert($request->validated());
-            return response()->json($book);
-        });
+                    return response()->json(["message" => "this vacancy is closed"]);
+                }
+                $workers_booked_inc = $booked->workers_booked + 1;
+                if ($booked->workers_amount <= $workers_booked_inc) {
+                    Vacancy::where('id', '=', "{$vacancy_id}")->update(['status' =>  'closed']);
+                }
+                Vacancy::where('id', '=', "{$vacancy_id}")->update(['workers_booked' =>  "{$workers_booked_inc}"]);
+                $book = DB::table('user_vacancy')->insert($request->validated());
+                return response()->json($book);
+            });
+        }
     }
 
     public function unBook(BookRequest $request, Vacancy $vacancy)
     {
         $this->authorize('unBook', $vacancy);
-        DB::transaction(function () use ($request) {
-            $user_id = $request->user_id;
-            $vacancy_id = $request->vacancy_id;
-            $subscriptionCheck = DB::table('user_vacancy')
-                ->where('user_id', '=', "{$user_id}")
-                ->where('vacancy_id', '=', "{$vacancy_id}")
-                ->get()
-                ->count();
-            if ($subscriptionCheck > 0) {
+        $user_id = $request->user_id;
+        $vacancy_id = $request->vacancy_id;
+        $subscriptionCheck = DB::table('user_vacancy')
+            ->where('user_id', '=', "{$user_id}")
+            ->where('vacancy_id', '=', "{$vacancy_id}")
+            ->get()
+            ->count();
+        if ($subscriptionCheck > 0) {
+            DB::transaction(function () use ($user_id, $vacancy_id) {
                 $booked = Vacancy::select('workers_amount', 'workers_booked')->where('id', '=', "{$vacancy_id}")->get()->first();
                 $workers_booked_dc = $booked->workers_booked - 1;
                 Vacancy::where('id', '=', "{$vacancy_id}")->update(['workers_booked' =>  "{$workers_booked_dc}"], ['status' =>  'active']);
                 DB::table('user_vacancy')->where('user_id', '=', "{$user_id}")->where('vacancy_id', '=', "{$vacancy_id}")->delete();
-                return response()->json(["message" => "Unbooked"]);
-            }
-        });
-        return response()->json(["message" => "User does not booked"]);
+            });
+        } else return response()->json(["message" => "User does not booked"]);
+        return response()->json(["message" => "Unbooked"]);
     }
 
     public function vacancy()
