@@ -8,6 +8,7 @@ use App\Http\Resources\OrganizationResourceCollection;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrganizationController extends Controller
 {
@@ -31,7 +32,7 @@ class OrganizationController extends Controller
     public function store(StoreRequest $request)
     {
         $this->authorize('create', Organization::class);
-        $organization = Organization::create($request->validated());
+        $organization = Organization::create($request->validated() + ['user_id' => auth()->id()]);
         return response()->json($organization, 201);
     }
 
@@ -56,7 +57,17 @@ class OrganizationController extends Controller
     public function update(UpdateRequest $request, Organization $organization)
     {
         $this->authorize('update', $organization);
-        $organization->update($request->validated()); //->validated()
+        $organization->update($request->validated());
+        return response()->json($organization);
+    }
+
+    public function statsOrganization()
+    {
+        $this->authorize('viewAny', Organization::class);
+        $active = Organization::select(DB::raw('COUNT(id) as `Active`'))->get()->first();
+        $softDelete = Organization::withTrashed()->select(DB::raw('COUNT(deleted_at) as `SoftDelete`'))->get()->first();
+        $all = Organization::withTrashed()->select(DB::raw('COUNT(id) as `ALL`'))->get()->first();
+        $organization = array_merge(json_decode($active, true), json_decode($softDelete, true), json_decode($all, true));
         return response()->json($organization);
     }
 

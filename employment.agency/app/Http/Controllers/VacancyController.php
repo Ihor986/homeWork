@@ -19,11 +19,13 @@ class VacancyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
 
         $this->authorize('viewAny', Vacancy::class);
-        $vacancies = Vacancy::get();
+        if ($request->only_active == 'false') {
+            $vacancies = Vacancy::get();
+        } else $vacancies = Vacancy::where('status', '=', 'active')->get();
         return VacancyResourceCollection::make($vacancies);
     }
 
@@ -115,8 +117,14 @@ class VacancyController extends Controller
         return response()->json(["message" => "Unbooked"]);
     }
 
-    public function vacancy()
+    public function statsVacancy()
     {
+        $this->authorize('viewAny', Vacancy::class);
+        $active = Vacancy::select(DB::raw('COUNT(status) as active'))->where('status', 'active')->get()->first();
+        $closed = Vacancy::select(DB::raw('COUNT(status) as closed'))->where('status', 'closed')->get()->first();
+        $all = Vacancy::select(DB::raw('COUNT(status) as `all`'))->get()->first();
+        $vacancies = array_merge(json_decode($active, true), json_decode($closed, true), json_decode($all, true));
+        return response()->json($vacancies);
     }
 
     /**

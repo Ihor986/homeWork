@@ -42,8 +42,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 });
 // Stats
 Route::group(['prefix' => 'stats'], function () {
-    // Route::post('vacancy', [AuthController::class, 'register'])->middleware('auth:sanctum');
-    // Route::post('organization', [AuthController::class, 'login'])->middleware('auth:sanctum');
+    Route::get('vacancy', [VacancyController::class, 'statsVacancy'])->middleware('auth:sanctum');
+    Route::get('organization', [OrganizationController::class, 'statsOrganization'])->middleware('auth:sanctum');
     Route::get('user', [UserController::class, 'statsUser'])->middleware('auth:sanctum');
 });
 
