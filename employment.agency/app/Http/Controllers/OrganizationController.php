@@ -20,7 +20,7 @@ class OrganizationController extends Controller
     public function index()
     {
         $this->authorize('viewAny', Organization::class);
-        $organizations = Organization::get();
+        $organizations = Organization::with(User::class)->get();
         return OrganizationResourceCollection::make($organizations);
     }
     /**
@@ -45,6 +45,7 @@ class OrganizationController extends Controller
     public function show(Organization $organization)
     {
         $this->authorize('view', $organization);
+        $organization->load(['users']);
         return response()->json($organization);
     }
     /**

@@ -66,10 +66,4 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Models\Vacancy');
     }
-
-
-    // public function vacancies()
-    // {
-    //     return $this->belongsTo(Vacancy::class, 'foreign_key');
-    // }
 }

@@ -21,8 +21,8 @@ class OrganizationResource extends JsonResource
             'country' => $this->country,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'user' => UserResource::collection($this->whenLoaded('users')),
-
+            'creator' => UserResource::collection($this->whenLoaded('users')),
+            // 'user' => $this->user_id
         ];
     }
 }
