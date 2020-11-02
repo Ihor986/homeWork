@@ -31,7 +31,7 @@ class UserFactory extends Factory
             'country' => $this->faker->country,
             'city' => $this->faker->city,
             'phone' => $this->faker->phoneNumber,
-            'role' => $this->faker->randomElement($array = array('employer', 'worker', 'admin')),
+            'role' => $this->faker->randomElement($array = array('employer', 'worker')),
             // 'remember_token' => Str::random(10),
         ];
     }

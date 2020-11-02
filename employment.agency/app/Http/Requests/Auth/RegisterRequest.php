@@ -32,7 +32,7 @@ class RegisterRequest extends FormRequest
             'country' => 'sometimes|string|max:100',
             'city' => 'sometimes|string|max:100',
             'phone' => 'sometimes|string|max:30',
-            'role' => 'sometimes|string|in:employer,worker,admin',
+            'role' => 'sometimes|string|in:employer,worker',
         ];
     }
 }

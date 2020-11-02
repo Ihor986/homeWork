@@ -26,7 +26,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        return false;
+        return true;
     }
 
     /**
@@ -73,7 +73,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        //
+        return true;
     }
 
     /**

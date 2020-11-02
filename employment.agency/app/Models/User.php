@@ -62,6 +62,12 @@ class User extends Authenticatable
         $this->attributes['password'] = Hash::make($value);
     }
 
+    public function vacancy()
+    {
+        return $this->belongsToMany('App\Models\Vacancy');
+    }
+
+
     // public function vacancies()
     // {
     //     return $this->belongsTo(Vacancy::class, 'foreign_key');

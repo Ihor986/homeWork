@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Vacancy\StoreRequest;
 use App\Http\Requests\Vacancy\UpdateRequest;
+use App\Http\Resources\VacancyResource;
+use App\Http\Resources\VacancyResourceCollection;
 use App\Models\Vacancy;
 use Illuminate\Http\Request;
 
@@ -19,7 +21,7 @@ class VacancyController extends Controller
 
         $this->authorize('viewAny', Vacancy::class);
         $vacancies = Vacancy::get();
-        return response()->json($vacancies);
+        return VacancyResourceCollection::make($vacancies);
     }
 
     /**
@@ -32,7 +34,7 @@ class VacancyController extends Controller
     {
         $this->authorize('create', Vacancy::class);
         $vacancy = Vacancy::create($request->validated());
-        return response()->json($vacancy, 201);
+        return response()->json($vacancy);
     }
 
     /**
@@ -44,7 +46,8 @@ class VacancyController extends Controller
     public function show(Vacancy $vacancy)
     {
         $this->authorize('view', $vacancy);
-        return response()->json($vacancy);
+        // return response()->json($vacancy);
+        return VacancyResource::make($vacancy);
     }
     /**
      * Update the specified resource in storage.
@@ -60,7 +63,7 @@ class VacancyController extends Controller
         return response()->json($vacancy);
     }
 
-        public function vacancy()
+    public function vacancy()
     {
         //
     }

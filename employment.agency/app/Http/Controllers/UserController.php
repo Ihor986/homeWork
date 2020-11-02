@@ -75,9 +75,8 @@ class UserController extends Controller
         $admin = User::select(DB::raw('COUNT(role) as admin'))->where('role', 'admin')->get()->first();
         $worker = User::select(DB::raw('COUNT(role) as worker'))->where('role', 'worker')->get()->first();
         $employer = User::select(DB::raw('COUNT(role) as employer'))->where('role', 'employer')->get()->first();
-        $users = array_merge(json_decode($admin, true),json_decode($worker, true),json_decode($employer, true));
+        $users = array_merge(json_decode($admin, true), json_decode($worker, true), json_decode($employer, true));
         return response()->json($users);
-    
     }
 
     /**

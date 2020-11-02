@@ -18,7 +18,7 @@ class OrganizationController extends Controller
      */
     public function index()
     {
-        $this->authorizeResource('viewAny', Organization::class);
+        $this->authorize('viewAny', Organization::class);
         $organizations = Organization::get();
         return OrganizationResourceCollection::make($organizations);
     }
@@ -30,7 +30,7 @@ class OrganizationController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $this->authorizeResource('create', Organization::class);
+        $this->authorize('create', Organization::class);
         $organization = Organization::create($request->validated());
         return response()->json($organization, 201);
     }
@@ -43,7 +43,7 @@ class OrganizationController extends Controller
      */
     public function show(Organization $organization)
     {
-        $this->authorizeResource('view', $organization);
+        $this->authorize('view', $organization);
         return response()->json($organization);
     }
     /**
@@ -55,7 +55,7 @@ class OrganizationController extends Controller
      */
     public function update(UpdateRequest $request, Organization $organization)
     {
-        $this->authorizeResource('update', $organization);
+        $this->authorize('update', $organization);
         $organization->update($request->validated()); //->validated()
         return response()->json($organization);
     }
@@ -68,7 +68,7 @@ class OrganizationController extends Controller
      */
     public function destroy(Organization $organization)
     {
-        $this->authorizeResource('delete', $organization);
+        $this->authorize('delete', $organization);
         $organization->delete();
         return response()->json(["message" => "Deleted"], 204);
     }

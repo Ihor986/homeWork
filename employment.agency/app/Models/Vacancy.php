@@ -25,8 +25,8 @@ class Vacancy extends Model
         return $this->belongsTo(Organization::class);
     }
 
-    // public function user()
-    // {
-    //     return $this->hasMany(User::class, 'foreign_key');
-    // }
+    public function user()
+    {
+        return $this->belongsToMany('App\Models\User');
+    }
 }

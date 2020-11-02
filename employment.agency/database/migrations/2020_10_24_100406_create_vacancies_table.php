@@ -23,8 +23,6 @@ class CreateVacanciesTable extends Migration
             $table->string('vacancy_name');
             $table->integer('workers_amount');
             $table->integer('workers_booked')->nullable();
-
-
             $table->integer('salary');
             $table->timestamps();
             $table->softDeletes();
