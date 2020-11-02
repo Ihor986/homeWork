@@ -76,6 +76,16 @@ class VacancyPolicy
         return true;
     }
 
+    public function book(User $user, Vacancy $vacancy)
+    {
+        return true;
+    }
+
+    public function unBook(User $user, Vacancy $vacancy)
+    {
+        return true;
+    }
+
     /**
      * Determine whether the user can restore the model.
      *
