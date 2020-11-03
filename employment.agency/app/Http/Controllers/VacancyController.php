@@ -7,6 +7,7 @@ use App\Http\Requests\Vacancy\StoreRequest;
 use App\Http\Requests\Vacancy\UpdateRequest;
 use App\Http\Resources\VacancyResource;
 use App\Http\Resources\VacancyResourceCollection;
+use App\Models\Organization;
 use App\Models\Vacancy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -70,6 +71,8 @@ class VacancyController extends Controller
 
     public function book(BookRequest $request, Vacancy $vacancy)
     {
+
+
         $this->authorize('book', $vacancy);
         $user_id = $request->user_id;
         $vacancy_id = $request->vacancy_id;
@@ -119,7 +122,7 @@ class VacancyController extends Controller
 
     public function statsVacancy()
     {
-        $this->authorize('viewAny', Vacancy::class);
+        $this->authorize('stats', Vacancy::class);
         $active = Vacancy::select(DB::raw('COUNT(status) as active'))->where('status', 'active')->get()->first();
         $closed = Vacancy::select(DB::raw('COUNT(status) as closed'))->where('status', 'closed')->get()->first();
         $all = Vacancy::select(DB::raw('COUNT(status) as `all`'))->get()->first();

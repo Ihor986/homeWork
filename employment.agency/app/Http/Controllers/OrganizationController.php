@@ -48,6 +48,8 @@ class OrganizationController extends Controller
     public function show(Organization $organization)
     {
         $this->authorize('view', $organization);
+
+
         $organization->load(['creator']);
         // return $this->success(OrganizationResource::make($organization));
         // return OrganizationResourceCollection::make($organization);
@@ -69,7 +71,7 @@ class OrganizationController extends Controller
 
     public function statsOrganization()
     {
-        $this->authorize('viewAny', Organization::class);
+        $this->authorize('stats', Organization::class);
         $active = Organization::select(DB::raw('COUNT(id) as `Active`'))->get()->first();
         $softDelete = Organization::withTrashed()->select(DB::raw('COUNT(deleted_at) as `SoftDelete`'))->get()->first();
         $all = Organization::withTrashed()->select(DB::raw('COUNT(id) as `ALL`'))->get()->first();

@@ -2,10 +2,12 @@
 
 namespace App\Policies;
 
+use App\Http\Requests\Vacancy\BookRequest;
 use App\Models\Organization;
 use App\Models\User;
 use App\Models\Vacancy;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Http\Request;
 
 class VacancyPolicy
 {
@@ -27,6 +29,11 @@ class VacancyPolicy
     public function viewAny(User $user)
     {
 
+        return true;
+    }
+
+    public function stats(User $user)
+    {
         return false;
     }
 
@@ -50,7 +57,7 @@ class VacancyPolicy
      */
     public function create(User $user)
     {
-        return true;
+        return $user->role == 'employer';
     }
 
     /**
@@ -62,7 +69,9 @@ class VacancyPolicy
      */
     public function update(User $user, Vacancy $vacancy)
     {
-        return true;
+        $vacancyOrganizationId = $vacancy->organization_id;
+        $creatorId = Organization::select('user_id')->where('id', '=', "{$vacancyOrganizationId}")->get()->first()->user_id;
+        return $user->id == $creatorId;
     }
 
 
@@ -75,17 +84,41 @@ class VacancyPolicy
      */
     public function delete(User $user, Vacancy $vacancy)
     {
-        return true;
+        $vacancyOrganizationId = $vacancy->organization_id;
+        $creatorId = Organization::select('user_id')->where('id', '=', "{$vacancyOrganizationId}")->get()->first()->user_id;
+        return $user->id == $creatorId;
     }
 
-    public function book(User $user, Vacancy $vacancy)
+
+
+    public function book(User $user) //, BookRequest $request
     {
-        return true;
+        $request = request();
+        $requestUserId = $request->user_id;
+        // return
+        return $user->id == $requestUserId;
     }
 
     public function unBook(User $user, Vacancy $vacancy)
     {
-        return true;
+
+        $request = request();
+        $requestUserId = $request->user_id;
+        $vacancyId = $request->vacancy_id;
+        $organizationId = Vacancy::select('organization_id')->where('id', '=', "{$vacancyId}")->get()->first()->organization_id;
+        $creatorId = Organization::select('user_id')->where('id', '=', "{$organizationId}")->get()->first()->user_id;
+
+        if ($user->id == $requestUserId || $user->id == $creatorId) {
+            return true;
+        } else return false;
+
+        // return true;
+        // $vacancyOrganizationId = $vacancy->organization_id;
+        // $creatorId = Organization::select('user_id')->where('id', '=', "{$vacancyOrganizationId}")->get()->first()->user_id;
+        // return $user->id == $creatorId;
+        // if ($user->role == 'worker' || $user->id == $creatorId) {
+        //     return true;
+        // } else return false;
     }
 
     /**

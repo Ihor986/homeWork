@@ -25,6 +25,11 @@ class OrganizationPolicy
      */
     public function viewAny(User $user)
     {
+        return true;
+    }
+
+    public function stats(User $user)
+    {
         return false;
     }
 
