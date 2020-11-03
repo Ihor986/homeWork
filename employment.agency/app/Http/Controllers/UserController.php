@@ -51,7 +51,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $this->authorize('view', User::class);
+        $this->authorize('view', $user);
+        // return response()->json($user);
         return UserResource::make($user);
     }
 
@@ -64,7 +65,7 @@ class UserController extends Controller
      */
     public function update(UpdateRequest $request, User $user)
     {
-        $this->authorize('update', User::class);
+        $this->authorize('update', $user);
         $user->update($request->validated());
         return response()->json($user);
     }
@@ -87,7 +88,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $this->authorize('delete', User::class);
+        $this->authorize('delete', $user);
         $user->delete();
         return response()->json(["message" => "Deleted"], 204);
     }

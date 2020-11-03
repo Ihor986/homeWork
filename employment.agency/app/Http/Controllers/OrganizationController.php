@@ -48,6 +48,23 @@ class OrganizationController extends Controller
     public function show(Organization $organization)
     {
         $this->authorize('view', $organization);
+        $request = request();
+        $vacancies = $request->vacancies;
+        $workers = $request->workers;
+        if ($vacancies == 0) {
+        } else if ($vacancies == 1) {
+        } else if ($vacancies == 2) {
+        } else if ($vacancies == 3) {
+        }
+        if ($workers == 0) {
+        } else if ($workers == 1) {
+        }
+        // $users = User::when($search, function ($query, $search) {
+        //     return $query->where('first_name', 'like', $search)
+        //         ->orWhere('last_name', 'like', $search)
+        //         ->orWhere('city', 'like', $search)
+        //         ->orWhere('country', 'like', $search);
+        // })->get(); //;with('')->paginate()
 
 
         $organization->load(['creator']);
