@@ -25,6 +25,7 @@ class VacancyFactory extends Factory
             'vacancy_name' => $this->faker->jobTitle,
             'workers_amount' => $this->faker->numberBetween(10, 20),
             'organization_id' => $this->faker->numberBetween(1, 100),
+            // 'creator_id' => $this->faker->numberBetween(1, 100),
             'salary' => $this->faker->numberBetween(300, 10000),
             'workers_booked' => $this->faker->numberBetween(1, 10),
         ];

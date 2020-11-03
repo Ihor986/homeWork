@@ -38,7 +38,9 @@ class UserPolicy
      */
     public function view(User $user, User $model)
     {
-        return false; // $user->id == 10;
+
+
+        return true;
     }
 
     /**

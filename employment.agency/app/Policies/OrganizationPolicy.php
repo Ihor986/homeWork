@@ -37,7 +37,8 @@ class OrganizationPolicy
      */
     public function view(User $user, Organization $organization)
     {
-        return true;
+        return
+            $user->id == $organization->user_id;
     }
 
     /**
@@ -48,7 +49,7 @@ class OrganizationPolicy
      */
     public function create(User $user)
     {
-        return true;
+        return $user->role == 'employer';
     }
 
     /**
@@ -60,7 +61,8 @@ class OrganizationPolicy
      */
     public function update(User $user, Organization $organization)
     {
-        return true;
+        return
+            $user->id == $organization->user_id;
     }
 
     /**
@@ -72,7 +74,8 @@ class OrganizationPolicy
      */
     public function delete(User $user, Organization $organization)
     {
-        return true;
+        return
+            $user->id == $organization->user_id;
     }
 
     /**
@@ -84,7 +87,7 @@ class OrganizationPolicy
      */
     public function restore(User $user, Organization $organization)
     {
-        return true;
+        return false;
     }
 
     /**
@@ -96,6 +99,6 @@ class OrganizationPolicy
      */
     public function forceDelete(User $user, Organization $organization)
     {
-        return true;
+        return false;
     }
 }
