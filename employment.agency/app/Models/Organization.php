@@ -21,7 +21,7 @@ class Organization extends Model
 
 
 
-    public function user()
+    public function creator()
     {
         return $this->belongsTo(User::class, 'user_id');
     }

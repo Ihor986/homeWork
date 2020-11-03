@@ -25,8 +25,8 @@ class Vacancy extends Model
         return $this->belongsTo(Organization::class);
     }
 
-    public function user()
+    public function users()
     {
-        return $this->belongsToMany('App\Models\User');
+        return $this->belongsToMany(User::class)->withTimestamps();
     }
 }

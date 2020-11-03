@@ -51,10 +51,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function organizations()
+    public function organization()
     {
 
-        return $this->hasMany(Organization::class);
+        return $this->hasMany(Organization::class, 'user_id');
     }
 
     public function setPasswordAttribute($value)
@@ -62,8 +62,8 @@ class User extends Authenticatable
         $this->attributes['password'] = Hash::make($value);
     }
 
-    public function vacancy()
+    public function vacancies()
     {
-        return $this->belongsToMany('App\Models\Vacancy');
+        return $this->belongsToMany(Vacancy::class)->withTimestamps();
     }
 }

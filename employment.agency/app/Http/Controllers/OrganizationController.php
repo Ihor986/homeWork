@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Organization\StoreRequest;
 use App\Http\Requests\Organization\UpdateRequest;
+use App\Http\Resources\OrganizationResource;
 use App\Http\Resources\OrganizationResourceCollection;
 use App\Models\Organization;
 use App\Models\User;
@@ -20,8 +21,10 @@ class OrganizationController extends Controller
     public function index()
     {
         $this->authorize('viewAny', Organization::class);
-        $organizations = Organization::with(User::class)->get();
-        return OrganizationResourceCollection::make($organizations);
+        $organizations = Organization::with('creator')->get();
+        return response()->json($organizations);
+        // return $this->success(OrganizationResource::make($organizations));
+        // return OrganizationResourceCollection::make($organizations);
     }
     /**
      * Store a newly created resource in storage.
@@ -45,7 +48,9 @@ class OrganizationController extends Controller
     public function show(Organization $organization)
     {
         $this->authorize('view', $organization);
-        $organization->load(['users']);
+        $organization->load(['creator']);
+        // return $this->success(OrganizationResource::make($organization));
+        // return OrganizationResourceCollection::make($organization);
         return response()->json($organization);
     }
     /**

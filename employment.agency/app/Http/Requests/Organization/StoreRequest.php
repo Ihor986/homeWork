@@ -26,8 +26,7 @@ class StoreRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'country' => 'required|string|max:100',
-            'city' => 'required|string|max:100',
-            'user_id' => 'sometimes|numeric|max:99999999999'
+            'city' => 'required|string|max:100'
         ];
     }
 }
