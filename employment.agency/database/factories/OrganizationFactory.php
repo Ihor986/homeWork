@@ -25,7 +25,7 @@ class OrganizationFactory extends Factory
             'title' => $this->faker->company,
             'country' => $this->faker->country,
             'city' => $this->faker->city,
-            'user_id' => $this->faker->numberBetween(52, 100),
+            'user_id' => $this->faker->numberBetween(102, 150),
         ];
     }
 }

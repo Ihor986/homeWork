@@ -15,10 +15,10 @@ class User_VacanciesSeeder extends Seeder
     public function run()
     {
         $i = 0;
-        $user_id = 1;
+        $user_id = 2;
         $vacancy_id = 1;
         $newVacancy_id = 2;
-        $newUser_id = 2;
+        $newUser_id = 3;
         while ($i < 50) {
 
             DB::table('user_vacancy')->insert([

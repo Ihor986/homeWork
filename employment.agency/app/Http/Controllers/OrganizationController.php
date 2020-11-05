@@ -10,6 +10,7 @@ use App\Models\Organization;
 use App\Models\User;
 use App\Models\Vacancy;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class OrganizationController extends Controller
@@ -46,40 +47,105 @@ class OrganizationController extends Controller
      * @param  \App\Models\Organization  $organization
      * @return \Illuminate\Http\Response
      */
-    public function show(Organization $organization)
+    public function show2(Organization $organization)
     {
         $this->authorize('view', $organization);
-        // $request = request();
-        // $vacancies = $request->vacancies;
-        // $workers = $request->workers;
+
         $organizationId = $organization->id;
-        // if ($workers == 0) {
-        // } else if ($workers == 1) {
-        // }
-        $vacancy = Vacancy::where('organization_id', "{$organizationId}")->where('status', 'active')->get();
-        $vacancy = Vacancy::where('organization_id', "{$organizationId}")->where('status', 'closed')->get();
-        $vacancy = Vacancy::where('organization_id', "{$organizationId}")->get();
+
+        $vacancies = json_decode(Vacancy::where('organization_id', $organizationId)->get(), true);
+        $vacanciesID = [];
+        $usersObjectId = [];
+        $usersId = [];
+        foreach ($vacancies as $vacancy) {
+            array_push($vacanciesID, $vacancy['id']);
+        }
+        $vacancyUsers = DB::table('user_vacancy')->select('user_id')->whereIn('vacancy_id', $vacanciesID)->get();
+        array_push($usersObjectId, json_decode($vacancyUsers, true));
+        $usersArr = Arr::collapse($usersObjectId);
+        foreach ($usersArr as $user) {
+            array_push($usersId, $user['user_id']);
+        }
+        $users = User::whereIn('id', $usersId)->get();
+        return $users;
+
+        $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'active')->get();
+        $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'closed')->get();
+        $vacancy = Vacancy::where('organization_id', $organizationId)->get();
         return $vacancy;
-
-        // when($workers == 1, function ($query, $request, $organizationId) {
-        //     if ($vacancies == 1) {
-        //         return $query->where(['organization_id', '=', "{$organizationId}"], ['status', '=', 'active']);
-        //     } else if ($vacancies == 2) {
-        //     } else if ($vacancies == 3) {
-        //     } else {
-        //     }
-        // }, function ($query, $search) {
-        // })->get();
-
-        // $users = User::when($search, function ($query, $search) {
-        //     return $query->where('first_name', 'like', $search)
-        //         ->orWhere('last_name', 'like', $search)
-        //         ->orWhere('city', 'like', $search)
-        //         ->orWhere('country', 'like', $search);
-        // })->get(); //;with('')->paginate()
 
 
         $organization->load(['creator']);
+        return response()->json($organization);
+    }
+    public function show(Organization $organization)
+    {
+        $this->authorize('view', $organization);
+        $request = request();
+        $vacanciesRequest = $request->vacancies;
+        $workers = $request->workers;
+        $organizationId = $organization->id;
+        // if ($workers == 1) {
+        //     if()
+        // } else  {
+        // }
+        $vacancies = json_decode(Vacancy::where('organization_id', $organizationId)->get(), true);
+        $vacanciesID = [];
+        $usersObjectId = [];
+        $usersId = [];
+        foreach ($vacancies as $vacancy) {
+            array_push($vacanciesID, $vacancy['id']);
+        }
+        $vacancyUsers = DB::table('user_vacancy')->select('user_id')->whereIn('vacancy_id', $vacanciesID)->get();
+        array_push($usersObjectId, json_decode($vacancyUsers, true));
+        $usersArr = Arr::collapse($usersObjectId);
+        foreach ($usersArr as $user) {
+            array_push($usersId, $user['user_id']);
+        }
+        $users = User::whereIn('id', $usersId)->get();
+        // return $users;
+        // $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'active')->get();
+        // $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'closed')->get();
+        // $vacancy = Vacancy::where('organization_id', $organizationId)->get();
+        // return $vacancy;
+
+        $organization->load(['creator']);
+
+        if ($workers == 1) {
+            if ($vacanciesRequest == 1) {
+                $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'active')->get();
+                return response()->json(array_merge(json_decode($organization, true), json_decode($vacancy, true), json_decode($users, true)));
+            } else if ($vacanciesRequest == 2) {
+                $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'closed')->get();
+                return response()->json(array_merge(json_decode($organization, true), json_decode($vacancy, true), json_decode($users, true)));
+            } else if ($vacanciesRequest == 3) {
+                $vacancy = Vacancy::where('organization_id', $organizationId)->get();
+                return response()->json(array_merge(json_decode($organization, true), json_decode($vacancy, true), json_decode($users, true)));
+            } else {
+                return response()->json(array_merge(json_decode($organization, true), json_decode($users, true)));
+            }
+        } else {
+            if ($vacanciesRequest == 1) {
+                $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'active')->get();
+                return response()->json(array_merge(json_decode($organization, true), json_decode($vacancy, true)));
+            } else if ($vacanciesRequest == 2) {
+                $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'closed')->get();
+                return response()->json(array_merge(json_decode($organization, true), json_decode($vacancy, true)));
+            } else if ($vacanciesRequest == 3) {
+                $vacancy = Vacancy::where('organization_id', $organizationId)->get();
+                return response()->json(array_merge(json_decode($organization, true), json_decode($vacancy, true)));
+            } else {
+                return response()->json($organization);
+            }
+        }
+
+        // , function ($query, $search) {
+        // })->get();
+
+
+
+
+        // $organization->load(['creator']);
         // return $this->success(OrganizationResource::make($organization));
         // return OrganizationResourceCollection::make($organization);
         return response()->json($organization);
