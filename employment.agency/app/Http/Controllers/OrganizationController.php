@@ -8,6 +8,7 @@ use App\Http\Resources\OrganizationResource;
 use App\Http\Resources\OrganizationResourceCollection;
 use App\Models\Organization;
 use App\Models\User;
+use App\Models\Vacancy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -48,17 +49,28 @@ class OrganizationController extends Controller
     public function show(Organization $organization)
     {
         $this->authorize('view', $organization);
-        $request = request();
-        $vacancies = $request->vacancies;
-        $workers = $request->workers;
-        if ($vacancies == 0) {
-        } else if ($vacancies == 1) {
-        } else if ($vacancies == 2) {
-        } else if ($vacancies == 3) {
-        }
-        if ($workers == 0) {
-        } else if ($workers == 1) {
-        }
+        // $request = request();
+        // $vacancies = $request->vacancies;
+        // $workers = $request->workers;
+        $organizationId = $organization->id;
+        // if ($workers == 0) {
+        // } else if ($workers == 1) {
+        // }
+        $vacancy = Vacancy::where('organization_id', "{$organizationId}")->where('status', 'active')->get();
+        $vacancy = Vacancy::where('organization_id', "{$organizationId}")->where('status', 'closed')->get();
+        $vacancy = Vacancy::where('organization_id', "{$organizationId}")->get();
+        return $vacancy;
+
+        // when($workers == 1, function ($query, $request, $organizationId) {
+        //     if ($vacancies == 1) {
+        //         return $query->where(['organization_id', '=', "{$organizationId}"], ['status', '=', 'active']);
+        //     } else if ($vacancies == 2) {
+        //     } else if ($vacancies == 3) {
+        //     } else {
+        //     }
+        // }, function ($query, $search) {
+        // })->get();
+
         // $users = User::when($search, function ($query, $search) {
         //     return $query->where('first_name', 'like', $search)
         //         ->orWhere('last_name', 'like', $search)

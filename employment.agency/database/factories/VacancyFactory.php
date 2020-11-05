@@ -27,7 +27,7 @@ class VacancyFactory extends Factory
             'organization_id' => $this->faker->numberBetween(1, 100),
             // 'creator_id' => $this->faker->numberBetween(1, 100),
             'salary' => $this->faker->numberBetween(300, 10000),
-            'workers_booked' => $this->faker->numberBetween(1, 10),
+            'workers_booked' => 2,
         ];
     }
 }
