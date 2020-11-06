@@ -24,7 +24,7 @@ class OrganizationController extends Controller
     {
         $this->authorize('viewAny', Organization::class);
         $organizations = Organization::with('creator')->get();
-        return response()->json($organizations);
+        return $this->success($organizations);
     }
     /**
      * Store a newly created resource in storage.
@@ -70,28 +70,28 @@ class OrganizationController extends Controller
             $users = User::whereIn('id', $usersId)->get();
             if ($vacanciesRequest == 1) {
                 $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'active')->get();
-                return response()->json(array_merge(json_decode($organization, true), ['vacancies' => json_decode($vacancy, true)], ['workers' => json_decode($users, true)]));
+                return $this->success(array_merge(json_decode($organization, true), ['vacancies' => json_decode($vacancy, true)], ['workers' => json_decode($users, true)]));
             } else if ($vacanciesRequest == 2) {
                 $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'closed')->get();
-                return response()->json(array_merge(json_decode($organization, true), ['vacancies' => json_decode($vacancy, true)], ['workers' => json_decode($users, true)]));
+                return $this->success(array_merge(json_decode($organization, true), ['vacancies' => json_decode($vacancy, true)], ['workers' => json_decode($users, true)]));
             } else if ($vacanciesRequest == 3) {
                 $vacancy = Vacancy::where('organization_id', $organizationId)->get();
-                return response()->json(array_merge(json_decode($organization, true), ['vacancies' => json_decode($vacancy, true)], ['workers' => json_decode($users, true)]));
+                return $this->success(array_merge(json_decode($organization, true), ['vacancies' => json_decode($vacancy, true)], ['workers' => json_decode($users, true)]));
             } else {
-                return response()->json(array_merge(json_decode($organization, true), ['workers' => json_decode($users, true)]));
+                return $this->success(array_merge(json_decode($organization, true), ['workers' => json_decode($users, true)]));
             }
         } else {
             if ($vacanciesRequest == 1) {
                 $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'active')->get();
-                return response()->json(array_merge(json_decode($organization, true), ['vacancies' => json_decode($vacancy, true)]));
+                return $this->success(array_merge(json_decode($organization, true), ['vacancies' => json_decode($vacancy, true)]));
             } else if ($vacanciesRequest == 2) {
                 $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'closed')->get();
-                return response()->json(array_merge(json_decode($organization, true), ['vacancies' => json_decode($vacancy, true)]));
+                return $this->success(array_merge(json_decode($organization, true), ['vacancies' => json_decode($vacancy, true)]));
             } else if ($vacanciesRequest == 3) {
                 $vacancy = Vacancy::where('organization_id', $organizationId)->get();
-                return response()->json(array_merge(json_decode($organization, true), ['vacancies' => json_decode($vacancy, true)]));
+                return $this->success(array_merge(json_decode($organization, true), ['vacancies' => json_decode($vacancy, true)]));
             } else {
-                return response()->json($organization);
+                return $this->success($organization);
             }
         }
     }
@@ -106,7 +106,8 @@ class OrganizationController extends Controller
     {
         $this->authorize('update', $organization);
         $organization->update($request->validated());
-        return response()->json($organization);
+        $organization->load(['creator']);
+        return $this->success($organization);
     }
 
     public function statsOrganization()
@@ -116,7 +117,7 @@ class OrganizationController extends Controller
         $softDelete = Organization::withTrashed()->select(DB::raw('COUNT(deleted_at) as `SoftDelete`'))->get()->first();
         $all = Organization::withTrashed()->select(DB::raw('COUNT(id) as `ALL`'))->get()->first();
         $organization = array_merge(json_decode($active, true), json_decode($softDelete, true), json_decode($all, true));
-        return response()->json($organization);
+        return $this->success($organization);
     }
 
     /**
@@ -129,6 +130,6 @@ class OrganizationController extends Controller
     {
         $this->authorize('delete', $organization);
         $organization->delete();
-        return response()->json(["message" => "Deleted"], 204);
+        return response()->json(['message' => 'Deleted'], 204);
     }
 }

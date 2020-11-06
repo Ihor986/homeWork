@@ -27,7 +27,7 @@ class VacancyController extends Controller
         if ($request->only_active == 'false') {
             $vacancies = Vacancy::get();
         } else $vacancies = Vacancy::where('status', '=', 'active')->get();
-        return VacancyResourceCollection::make($vacancies);
+        return $this->success($vacancies);
     }
 
     /**
@@ -40,7 +40,7 @@ class VacancyController extends Controller
     {
         $this->authorize('create', Vacancy::class);
         $vacancy = Vacancy::create($request->validated());
-        return response()->json($vacancy);
+        return $this->created($vacancy);
     }
 
     /**
@@ -52,7 +52,7 @@ class VacancyController extends Controller
     public function show(Vacancy $vacancy)
     {
         $this->authorize('view', $vacancy);
-        return VacancyResource::make($vacancy);
+        return $this->success($vacancy);
     }
     /**
      * Update the specified resource in storage.
@@ -65,7 +65,7 @@ class VacancyController extends Controller
     {
         $this->authorize('update', $vacancy);
         $vacancy->update($request->validated());
-        return response()->json($vacancy);
+        return $this->success($vacancy);
     }
 
     public function book(BookRequest $request, Vacancy $vacancy)
@@ -85,7 +85,7 @@ class VacancyController extends Controller
                 $booked = Vacancy::select('workers_amount', 'workers_booked')->where('id', '=', "{$vacancy_id}")->get()->first();
                 if ($booked->workers_amount <= $booked->workers_booked) {
 
-                    return response()->json(["message" => "this vacancy is closed"]);
+                    return $this->success(["message" => "this vacancy is closed"]);
                 }
                 $workers_booked_inc = $booked->workers_booked + 1;
                 if ($booked->workers_amount <= $workers_booked_inc) {
@@ -93,7 +93,7 @@ class VacancyController extends Controller
                 }
                 Vacancy::where('id', '=', "{$vacancy_id}")->update(['workers_booked' =>  "{$workers_booked_inc}"]);
                 $book = DB::table('user_vacancy')->insert($request->validated());
-                return response()->json($book);
+                return $this->success($book);
             });
         }
     }
@@ -115,8 +115,8 @@ class VacancyController extends Controller
                 Vacancy::where('id', '=', "{$vacancy_id}")->update(['workers_booked' =>  "{$workers_booked_dc}"], ['status' =>  'active']);
                 DB::table('user_vacancy')->where('user_id', '=', "{$user_id}")->where('vacancy_id', '=', "{$vacancy_id}")->delete();
             });
-        } else return response()->json(["message" => "User does not booked"]);
-        return response()->json(["message" => "Unbooked"]);
+        } else  return $this->success(["message" => "User does not booked"]);
+        return $this->success(["message" => "Unbooked"]);
     }
 
     public function statsVacancy()
@@ -126,7 +126,7 @@ class VacancyController extends Controller
         $closed = Vacancy::select(DB::raw('COUNT(status) as closed'))->where('status', 'closed')->get()->first();
         $all = Vacancy::select(DB::raw('COUNT(status) as `all`'))->get()->first();
         $vacancies = array_merge(json_decode($active, true), json_decode($closed, true), json_decode($all, true));
-        return response()->json($vacancies);
+        return $this->success($vacancies);
     }
 
     /**

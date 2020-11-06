@@ -29,7 +29,7 @@ class UserController extends Controller
                 ->orWhere('city', 'like', $search)
                 ->orWhere('country', 'like', $search);
         })->get();
-        return UserResourceCollection::make($users);
+        return $this->success($users);
     }
 
     /**
@@ -41,7 +41,7 @@ class UserController extends Controller
     public function show(User $user)
     {
         $this->authorize('view', $user);
-        return UserResource::make($user);
+        return $this->success($user);
     }
 
     /**
@@ -55,7 +55,7 @@ class UserController extends Controller
     {
         $this->authorize('update', $user);
         $user->update($request->validated());
-        return response()->json($user);
+        return $this->success($user);
     }
 
     public function statsUser()
@@ -65,7 +65,7 @@ class UserController extends Controller
         $worker = User::select(DB::raw('COUNT(role) as worker'))->where('role', 'worker')->get()->first();
         $employer = User::select(DB::raw('COUNT(role) as employer'))->where('role', 'employer')->get()->first();
         $users = array_merge(json_decode($admin, true), json_decode($worker, true), json_decode($employer, true));
-        return response()->json($users);
+        return $this->success($users);
     }
 
     /**
