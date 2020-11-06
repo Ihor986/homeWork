@@ -47,7 +47,9 @@ class VacancyPolicy
      */
     public function view(User $user, Vacancy $vacancy)
     {
-        return true;
+        $vacancyOrganizationId = $vacancy->id;
+        $creatorId = DB::table('organizations')->where('id', $vacancyOrganizationId)->get()->first()->user_id;
+        return $user->id == $creatorId;
     }
 
     /**

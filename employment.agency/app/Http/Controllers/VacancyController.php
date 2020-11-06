@@ -52,6 +52,7 @@ class VacancyController extends Controller
     public function show(Vacancy $vacancy)
     {
         $this->authorize('view', $vacancy);
+        $vacancy->load(['users']);
         return $this->success($vacancy);
     }
     /**
