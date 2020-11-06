@@ -14,7 +14,6 @@ class VacancySeeder extends Seeder
      */
     public function run()
     {
-        // Vacancy::factory(100)->create(); //closed
         Vacancy::factory(70)->create(['status' =>  'active']);
         Vacancy::factory(30)->create(['status' =>  'closed', 'workers_amount' => 2, 'workers_booked' => 2]);
     }

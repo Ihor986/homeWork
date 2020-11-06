@@ -12,10 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->authorizeResource(User::class);
-    // }
+
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +20,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        // return $request;
+
         $this->authorize('viewAny', User::class);
         $search = "%{$request->search}%";
         $users = User::when($search, function ($query, $search) {
@@ -31,17 +28,9 @@ class UserController extends Controller
                 ->orWhere('last_name', 'like', $search)
                 ->orWhere('city', 'like', $search)
                 ->orWhere('country', 'like', $search);
-        })->get(); //;with('')->paginate()
+        })->get();
         return UserResourceCollection::make($users);
     }
-
-    // public function index()
-    // {
-    //     // return $request;
-    //     $this->authorize('viewAny', User::class);
-    //     $users = User::get(); //;with('')->paginate()
-    //     return UserResourceCollection::make($users);
-    // }
 
     /**
      * Display the specified resource.
@@ -52,7 +41,6 @@ class UserController extends Controller
     public function show(User $user)
     {
         $this->authorize('view', $user);
-        // return response()->json($user);
         return UserResource::make($user);
     }
 
@@ -90,6 +78,6 @@ class UserController extends Controller
     {
         $this->authorize('delete', $user);
         $user->delete();
-        return response()->json(["message" => "Deleted"], 204);
+        return response()->json(['message' => 'Deleted'], 204);
     }
 }

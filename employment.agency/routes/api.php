@@ -19,9 +19,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
 
 
 //Auth
@@ -32,12 +29,6 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanct
 // Authenticated users
 Route::group(['middleware' => ['auth:sanctum']], function () {
     // User
-
-    // Route::get('user', [UserController::class, 'index']);
-    // Route::post('user', [UserController::class, 'store']);
-    // Route::get('user/{id}', [UserController::class, 'show']);
-    // Route::put('user/{id}', [UserController::class, 'update']);
-    // Route::delete('user/{id}', [UserController::class, 'destroy']);
     Route::apiResource('user', UserController::class);
     // Organization
     Route::apiResource('organization', OrganizationController::class);

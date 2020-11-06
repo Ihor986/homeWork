@@ -91,11 +91,10 @@ class VacancyPolicy
 
 
 
-    public function book(User $user) //, BookRequest $request
+    public function book(User $user)
     {
         $request = request();
         $requestUserId = $request->user_id;
-        // return
         return $user->id == $requestUserId;
     }
 
@@ -111,14 +110,6 @@ class VacancyPolicy
         if ($user->id == $requestUserId || $user->id == $creatorId) {
             return true;
         } else return false;
-
-        // return true;
-        // $vacancyOrganizationId = $vacancy->organization_id;
-        // $creatorId = Organization::select('user_id')->where('id', '=', "{$vacancyOrganizationId}")->get()->first()->user_id;
-        // return $user->id == $creatorId;
-        // if ($user->role == 'worker' || $user->id == $creatorId) {
-        //     return true;
-        // } else return false;
     }
 
     /**
@@ -128,10 +119,10 @@ class VacancyPolicy
      * @param  \App\Models\Vacancy  $vacancy
      * @return mixed
      */
-    public function restore(User $user, Vacancy $vacancy)
-    {
-        //
-    }
+    // public function restore(User $user, Vacancy $vacancy)
+    // {
+    //     //
+    // }
 
     /**
      * Determine whether the user can permanently delete the model.
@@ -140,8 +131,8 @@ class VacancyPolicy
      * @param  \App\Models\Vacancy  $vacancy
      * @return mixed
      */
-    public function forceDelete(User $user, Vacancy $vacancy)
-    {
-        //
-    }
+    // public function forceDelete(User $user, Vacancy $vacancy)
+    // {
+    //     //
+    // }
 }

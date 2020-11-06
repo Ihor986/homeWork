@@ -22,7 +22,7 @@ class OrganizationResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'creator' => UserResource::collection($this->whenLoaded('creator'))
-            // 'user' => $this->user_id
+
         ];
     }
 }

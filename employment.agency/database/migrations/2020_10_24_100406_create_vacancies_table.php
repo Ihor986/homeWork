@@ -17,8 +17,6 @@ class CreateVacanciesTable extends Migration
         Schema::create('vacancies', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Organization::class, 'organization_id')->constrained();
-            // $table->bigInteger('creator_id')->unsigned();
-            // $table->foreign('creator_id')->references('user_id')->on('organizations');
             $table->string('status')->default('active');
             $table->string('vacancy_name');
             $table->integer('workers_amount');

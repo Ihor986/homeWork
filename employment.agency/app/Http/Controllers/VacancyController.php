@@ -52,7 +52,6 @@ class VacancyController extends Controller
     public function show(Vacancy $vacancy)
     {
         $this->authorize('view', $vacancy);
-        // return response()->json($vacancy);
         return VacancyResource::make($vacancy);
     }
     /**

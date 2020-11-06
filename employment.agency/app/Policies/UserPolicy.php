@@ -38,7 +38,6 @@ class UserPolicy
      */
     public function view(User $user, User $model)
     {
-        // dd($model->id);
         return $user->id == $model->id;
     }
 

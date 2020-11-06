@@ -18,8 +18,6 @@ class CreateOrganizationsTable extends Migration
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class, 'user_id')->constrained();
-            // $table->bigInteger('user_id')->unsigned(); //->default(1)
-            // $table->foreign('user_id')->references('id')->on('users'); //User::class,
             $table->string('title');
             $table->string('city');
             $table->string('country');

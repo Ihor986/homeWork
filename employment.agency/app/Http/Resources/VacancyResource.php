@@ -20,7 +20,6 @@ class VacancyResource extends JsonResource
             "vacancy_name" => $this->vacancy_name,
             "workers_amount" => $this->workers_amount,
             "workers_booked" => $this->workers_booked,
-            // "organization": "Reuben Kling",
             "salary" => $this->salary,
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at

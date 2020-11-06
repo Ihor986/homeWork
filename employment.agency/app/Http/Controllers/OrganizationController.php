@@ -25,8 +25,6 @@ class OrganizationController extends Controller
         $this->authorize('viewAny', Organization::class);
         $organizations = Organization::with('creator')->get();
         return response()->json($organizations);
-        // return $this->success(OrganizationResource::make($organizations));
-        // return OrganizationResourceCollection::make($organizations);
     }
     /**
      * Store a newly created resource in storage.
