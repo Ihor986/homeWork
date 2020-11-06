@@ -47,37 +47,6 @@ class OrganizationController extends Controller
      * @param  \App\Models\Organization  $organization
      * @return \Illuminate\Http\Response
      */
-    public function show2(Organization $organization)
-    {
-        $this->authorize('view', $organization);
-
-        $organizationId = $organization->id;
-
-        $vacancies = json_decode(Vacancy::where('organization_id', $organizationId)->get(), true);
-        $vacanciesID = [];
-        $usersObjectId = [];
-        $usersId = [];
-        foreach ($vacancies as $vacancy) {
-            array_push($vacanciesID, $vacancy['id']);
-        }
-        $vacancyUsers = DB::table('user_vacancy')->select('user_id')->whereIn('vacancy_id', $vacanciesID)->get();
-        array_push($usersObjectId, json_decode($vacancyUsers, true));
-        $usersArr = Arr::collapse($usersObjectId);
-        foreach ($usersArr as $user) {
-            array_push($usersId, $user['user_id']);
-        }
-        $users = User::whereIn('id', $usersId)->get();
-        return $users;
-
-        $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'active')->get();
-        $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'closed')->get();
-        $vacancy = Vacancy::where('organization_id', $organizationId)->get();
-        return $vacancy;
-
-
-        $organization->load(['creator']);
-        return response()->json($organization);
-    }
     public function show(Organization $organization)
     {
         $this->authorize('view', $organization);
@@ -85,33 +54,22 @@ class OrganizationController extends Controller
         $vacanciesRequest = $request->vacancies;
         $workers = $request->workers;
         $organizationId = $organization->id;
-        // if ($workers == 1) {
-        //     if()
-        // } else  {
-        // }
-        $vacancies = json_decode(Vacancy::where('organization_id', $organizationId)->get(), true);
-        $vacanciesID = [];
-        $usersObjectId = [];
-        $usersId = [];
-        foreach ($vacancies as $vacancy) {
-            array_push($vacanciesID, $vacancy['id']);
-        }
-        $vacancyUsers = DB::table('user_vacancy')->select('user_id')->whereIn('vacancy_id', $vacanciesID)->get();
-        array_push($usersObjectId, json_decode($vacancyUsers, true));
-        $usersArr = Arr::collapse($usersObjectId);
-        foreach ($usersArr as $user) {
-            array_push($usersId, $user['user_id']);
-        }
-        $users = User::whereIn('id', $usersId)->get();
-        // return $users;
-        // $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'active')->get();
-        // $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'closed')->get();
-        // $vacancy = Vacancy::where('organization_id', $organizationId)->get();
-        // return $vacancy;
-
         $organization->load(['creator']);
-
         if ($workers == 1) {
+            $vacancies = json_decode(Vacancy::where('organization_id', $organizationId)->get(), true);
+            $vacanciesID = [];
+            $usersObjectId = [];
+            $usersId = [];
+            foreach ($vacancies as $vacancy) {
+                array_push($vacanciesID, $vacancy['id']);
+            }
+            $vacancyUsers = DB::table('user_vacancy')->select('user_id')->whereIn('vacancy_id', $vacanciesID)->get();
+            array_push($usersObjectId, json_decode($vacancyUsers, true));
+            $usersArr = Arr::collapse($usersObjectId);
+            foreach ($usersArr as $user) {
+                array_push($usersId, $user['user_id']);
+            }
+            $users = User::whereIn('id', $usersId)->get();
             if ($vacanciesRequest == 1) {
                 $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'active')->get();
                 return response()->json(array_merge(json_decode($organization, true), json_decode($vacancy, true), json_decode($users, true)));
@@ -138,17 +96,6 @@ class OrganizationController extends Controller
                 return response()->json($organization);
             }
         }
-
-        // , function ($query, $search) {
-        // })->get();
-
-
-
-
-        // $organization->load(['creator']);
-        // return $this->success(OrganizationResource::make($organization));
-        // return OrganizationResourceCollection::make($organization);
-        return response()->json($organization);
     }
     /**
      * Update the specified resource in storage.
