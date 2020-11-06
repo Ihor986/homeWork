@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Vacancy;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class VacancyPolicy
 {
@@ -57,7 +58,12 @@ class VacancyPolicy
      */
     public function create(User $user)
     {
-        return $user->role == 'employer';
+        if ($user->role == 'employer') {
+            $vacancyOrganizationId = request()->organization_id;
+            $creatorId = DB::table('organizations')->where('id', $vacancyOrganizationId)->get()->first()->user_id;
+            return $user->id == $creatorId;
+        };
+        return false;
     }
 
     /**
@@ -69,8 +75,8 @@ class VacancyPolicy
      */
     public function update(User $user, Vacancy $vacancy)
     {
-        $vacancyOrganizationId = $vacancy->organization_id;
-        $creatorId = Organization::select('user_id')->where('id', '=', "{$vacancyOrganizationId}")->get()->first()->user_id;
+        $vacancyOrganizationId = request()->organization_id;
+        $creatorId = DB::table('organizations')->where('id', $vacancyOrganizationId)->get()->first()->user_id;
         return $user->id == $creatorId;
     }
 
@@ -84,8 +90,8 @@ class VacancyPolicy
      */
     public function delete(User $user, Vacancy $vacancy)
     {
-        $vacancyOrganizationId = $vacancy->organization_id;
-        $creatorId = Organization::select('user_id')->where('id', '=', "{$vacancyOrganizationId}")->get()->first()->user_id;
+        $vacancyOrganizationId = $vacancy->id;
+        $creatorId = DB::table('organizations')->where('id', $vacancyOrganizationId)->get()->first()->user_id;
         return $user->id == $creatorId;
     }
 
@@ -104,12 +110,14 @@ class VacancyPolicy
         $request = request();
         $requestUserId = $request->user_id;
         $vacancyId = $request->vacancy_id;
-        $organizationId = Vacancy::select('organization_id')->where('id', '=', "{$vacancyId}")->get()->first()->organization_id;
-        $creatorId = Organization::select('user_id')->where('id', '=', "{$organizationId}")->get()->first()->user_id;
+        $organizationId = DB::table('vacancies')->select('organization_id')->where('id', '=', "{$vacancyId}")->get()->first()->organization_id;
+        $creatorId = DB::table('organizations')->select('user_id')->where('id', '=', "{$organizationId}")->get()->first()->user_id;
 
         if ($user->id == $requestUserId || $user->id == $creatorId) {
             return true;
-        } else return false;
+        } else {
+            return false;
+        }
     }
 
     /**
