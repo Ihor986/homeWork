@@ -75,9 +75,11 @@ class VacancyPolicy
      */
     public function update(User $user, Vacancy $vacancy)
     {
+        $vacancyId = $vacancy->id;
+        $creatorId = DB::table('organizations')->where('id', $vacancyId)->get()->first()->user_id;
         $vacancyOrganizationId = request()->organization_id;
-        $creatorId = DB::table('organizations')->where('id', $vacancyOrganizationId)->get()->first()->user_id;
-        return $user->id == $creatorId;
+        $updatorID = DB::table('organizations')->where('id', $vacancyOrganizationId)->get()->first()->user_id;
+        return $user->id == $updatorID && $creatorId == $updatorID;
     }
 
 

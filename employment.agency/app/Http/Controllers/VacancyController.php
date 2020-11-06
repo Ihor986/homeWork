@@ -110,9 +110,9 @@ class VacancyController extends Controller
             ->count();
         if ($subscriptionCheck > 0) {
             DB::transaction(function () use ($user_id, $vacancy_id) {
-                $booked = Vacancy::select('workers_amount', 'workers_booked')->where('id', '=', "{$vacancy_id}")->get()->first();
+                $booked = DB::table('vacancies')->select('workers_amount', 'workers_booked')->where('id', '=', "{$vacancy_id}")->get()->first();
                 $workers_booked_dc = $booked->workers_booked - 1;
-                Vacancy::where('id', '=', "{$vacancy_id}")->update(['workers_booked' =>  "{$workers_booked_dc}"], ['status' =>  'active']);
+                DB::table('vacancies')->where('id', '=', "{$vacancy_id}")->update(['workers_booked' =>  "{$workers_booked_dc}"], ['status' =>  'active']);
                 DB::table('user_vacancy')->where('user_id', '=', "{$user_id}")->where('vacancy_id', '=', "{$vacancy_id}")->delete();
             });
         } else  return $this->success(["message" => "User does not booked"]);
