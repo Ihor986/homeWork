@@ -72,26 +72,26 @@ class OrganizationController extends Controller
             $users = User::whereIn('id', $usersId)->get();
             if ($vacanciesRequest == 1) {
                 $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'active')->get();
-                return response()->json(array_merge(json_decode($organization, true), json_decode($vacancy, true), json_decode($users, true)));
+                return response()->json(array_merge(json_decode($organization, true), ['vacancies' => json_decode($vacancy, true)], ['workers' => json_decode($users, true)]));
             } else if ($vacanciesRequest == 2) {
                 $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'closed')->get();
-                return response()->json(array_merge(json_decode($organization, true), json_decode($vacancy, true), json_decode($users, true)));
+                return response()->json(array_merge(json_decode($organization, true), ['vacancies' => json_decode($vacancy, true)], ['workers' => json_decode($users, true)]));
             } else if ($vacanciesRequest == 3) {
                 $vacancy = Vacancy::where('organization_id', $organizationId)->get();
-                return response()->json(array_merge(json_decode($organization, true), json_decode($vacancy, true), json_decode($users, true)));
+                return response()->json(array_merge(json_decode($organization, true), ['vacancies' => json_decode($vacancy, true)], ['workers' => json_decode($users, true)]));
             } else {
-                return response()->json(array_merge(json_decode($organization, true), json_decode($users, true)));
+                return response()->json(array_merge(json_decode($organization, true), ['workers' => json_decode($users, true)]));
             }
         } else {
             if ($vacanciesRequest == 1) {
                 $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'active')->get();
-                return response()->json(array_merge(json_decode($organization, true), json_decode($vacancy, true)));
+                return response()->json(array_merge(json_decode($organization, true), ['vacancies' => json_decode($vacancy, true)]));
             } else if ($vacanciesRequest == 2) {
                 $vacancy = Vacancy::where('organization_id', $organizationId)->where('status', 'closed')->get();
-                return response()->json(array_merge(json_decode($organization, true), json_decode($vacancy, true)));
+                return response()->json(array_merge(json_decode($organization, true), ['vacancies' => json_decode($vacancy, true)]));
             } else if ($vacanciesRequest == 3) {
                 $vacancy = Vacancy::where('organization_id', $organizationId)->get();
-                return response()->json(array_merge(json_decode($organization, true), json_decode($vacancy, true)));
+                return response()->json(array_merge(json_decode($organization, true), ['vacancies' => json_decode($vacancy, true)]));
             } else {
                 return response()->json($organization);
             }
